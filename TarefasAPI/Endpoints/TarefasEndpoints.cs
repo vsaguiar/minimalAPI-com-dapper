@@ -24,7 +24,30 @@ public static class TarefasEndpoints
 
             return Results.Ok(tarefas);
         });
-        
+
+
+        // Endpoint para retornar uma única tarefa
+        app.MapGet("/tarefas/{id}", async (GetConnection connectionGetter, int id) =>
+        {
+            using var con = await connectionGetter();
+            var tarefa = con.Get<Tarefa>(id);
+
+            if (tarefa is null)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.Ok(tarefa);
+        });
+
+
+        // Endpoint para incluir uma nova tarefa
+        app.MapPost("/tarefas", async(GetConnection connectionGetter, Tarefa Tarefa) => 
+        {
+            using var con = await connectionGetter();
+            var id = con.Insert(Tarefa);
+            return Results.Created($"/tarefas/{id}", Tarefa);
+        });
 
     }
 }

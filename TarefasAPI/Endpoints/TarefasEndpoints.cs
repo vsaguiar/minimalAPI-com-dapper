@@ -58,5 +58,20 @@ public static class TarefasEndpoints
             return Results.Ok();
         });
 
+
+        // Endpoint para excluir uma tarefa
+        app.MapDelete("/tarefas/{id}", async (GetConnection connectionGetter, int id) =>
+        {
+            using var con = await connectionGetter();
+
+            var deleted = con.Get<Tarefa>(id);
+            if (deleted is null)
+            {
+                return Results.NotFound();
+            }
+            con.Delete(deleted);
+            return Results.Ok(deleted);
+        });
+
     }
 }

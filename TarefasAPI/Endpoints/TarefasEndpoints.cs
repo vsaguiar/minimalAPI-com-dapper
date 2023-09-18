@@ -49,5 +49,14 @@ public static class TarefasEndpoints
             return Results.Created($"/tarefas/{id}", Tarefa);
         });
 
+
+        // Endpoint para alterar uma tarefa
+        app.MapPut("/tarefas", async (GetConnection connectionGetter, Tarefa Tarefa) =>
+        {
+            using var con = await connectionGetter();
+            var id = con.Update(Tarefa);
+            return Results.Ok();
+        });
+
     }
 }
